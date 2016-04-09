@@ -5,13 +5,13 @@ import play.api.mvc._
 import play.api.libs.json._
 
 object Application extends Controller {
-
   def index = Action {
     Ok("Hello World")
   }
 
-  def slack = Action(parse.multipartFormData) { request =>
-    val result = request.toString()
-    Ok(Json.obj("status" -> "OK", "message" -> result))
+  def slack = Action { request =>
+    val params = request.body.asFormUrlEncoded
+    val teamId = params.get("team_id")(0)
+    Ok(Json.obj("status" -> "OK", "message" -> teamId))
   }
 }

@@ -8,7 +8,7 @@ import anorm.SqlParser._
 import scala.language.postfixOps
 import play.api.libs.json._
 
-case class VotingSession(id: Pk[Long], ticket: String, votes: Map[String, JsValue])
+case class VotingSession(id: Long, ticket: String, votes: Map[String, Int])
 
 object VotingSession {
   /**
@@ -16,34 +16,56 @@ object VotingSession {
     * @return VotingSession
     */
   val simple = {
-    get[Pk[Long]]("VotingSession.id") ~
+    get[Long]("VotingSession.id") ~
       get[String]("VotingSession.ticket") ~
       get[String]("VotingSession.votes") map {
       case id~ticket~votes => {
-        val votes_json = Json.parse(votes).as[JsObject]
-        val vote_map = votes_json match {
-          case JsObject(fields) => fields.toMap
-        }
-        VotingSession(id, ticket, vote_map)
+        val votes_json = Json.parse(votes).as[Map[String, Int]]
+        VotingSession(id, ticket, votes_json)
       }
     }
   }
 
-  def toJson(votingSession:VotingSession):String = {
-    s"""(Seq)
-    {
-      "id": ${votingSession.id},
-      "ticket": ${votingSession.ticket},
-      "votes": ${Json.toJson(votingSession.votes)}
-    }
-    """
+  def votes_to_json(votes:Map[String, Int]):JsObject = {
+    JsObject(votes.mapValues(vote => JsNumber(vote)).toSeq)
   }
 
+  def create(ticket: String, votes: Map[String, Int]) {
+    val votes_json = votes_to_json(votes).toString()
+    DB.withConnection {
+      implicit connection =>
+      SQL(s"""
+        INSERT INTO VotingSession (ticket, votes)
+        VALUES ('$ticket', '$votes_json');
+      """).executeUpdate()
+    }
+  }
+
+  def setVotes(votingSession:VotingSession, votes: Map[String, Int]) {
+    val votes_json = votes_to_json(votes).toString()
+    DB.withConnection {
+      implicit connection =>
+      SQL(s"""
+        UPDATE VotingSession SET votes='$votes_json'
+        WHERE id = ${votingSession.id}
+      """).executeUpdate()
+    }
+  }
+
+  def clearVotes(votingSession:VotingSession) {
+    setVotes(votingSession, Map[String, Int]())
+  }
+
+  def addVote(votingSession:VotingSession, user:String, vote:Int) {
+    val newVotes = votingSession.votes + (user -> vote)
+    setVotes(votingSession, newVotes)
+  }
+ 
   /**
     * Fetch the latest voting session from the database
     * @return VotingSession
     */
   def findCurrent = {
-    DB.withConnection { implicit connection => SQL("select * from VotingSession ORDER BY id LIMIT 1").as(VotingSession.simple.singleOpt) }
+    DB.withConnection { implicit connection => SQL("SELECT * FROM VotingSession ORDER BY id LIMIT 1").as(VotingSession.simple.singleOpt) }
   }
 }

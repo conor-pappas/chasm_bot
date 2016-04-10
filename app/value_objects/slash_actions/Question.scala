@@ -6,13 +6,15 @@ object Question extends SlashAction {
   def execute(
     votingSession:Option[VotingSession],
     username:String,
-    data:String) = {
+    data:String):Option[String] = {
     val question = data
     if (votingSession.isDefined) {
       postQuestionInChannel(question)
     } else {
       // TODO warn that session hasn't started
     }
+
+    None
   }
 
   def postQuestionInChannel(question:String) = {

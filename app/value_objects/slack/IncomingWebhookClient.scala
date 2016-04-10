@@ -5,12 +5,11 @@ object IncomingWebhookClient {
   import play.api.mvc._
   import play.api.libs.ws._
   import play.api.libs.json._
-  import collection.mutable.HashMap
 
   val WebhookUrl = "https://hooks.slack.com/services/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"
 
   def sendMessage(message:String, channel:Option[String]) {
-    var data = HashMap(
+    var data = Map(
       "username" -> "ChASM BOT",
       "text" -> message
     )

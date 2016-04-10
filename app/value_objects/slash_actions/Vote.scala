@@ -6,13 +6,15 @@ object Vote extends SlashAction {
   def execute(
     votingSession:Option[VotingSession],
     username:String,
-    data:String) = {
+    data:String):Option[String] = {
     var vote = data.toInt
     if (votingSession.isDefined) {
       addVote(votingSession.get, username, vote)
     } else {
       // TODO warn that session hasn't started
     }
+
+    None
   }
 
   def addVote(votingSession:VotingSession, username:String, vote:Int) = {

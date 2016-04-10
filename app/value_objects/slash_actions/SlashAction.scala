@@ -8,6 +8,6 @@ trait SlashAction {
   def execute(
     votingSession:Option[VotingSession],
     username:String,
-    data:String)
+    data:String):Option[String]
 
 }

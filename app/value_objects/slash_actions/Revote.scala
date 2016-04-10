@@ -6,7 +6,7 @@ object Revote extends SlashAction {
   def execute(
     votingSession:Option[VotingSession],
     username:String,
-    data:String) = {
+    data:String):Option[String] = {
     if (votingSession.isDefined) {
       val session = votingSession.get
       val ticketDescription = session.ticket
@@ -15,6 +15,8 @@ object Revote extends SlashAction {
     } else {
       // TODO warn that session hasn't started
     }
+
+    None
   }
 
   def clearVotes(session:VotingSession) = {
@@ -22,7 +24,7 @@ object Revote extends SlashAction {
   }
 
   def sendRevoteCalledMessage(ticketDescription:String) = {
-    val message = s"@here Given the discussion above about #ticketDescription, " + 
+    val message = s"<!here|here> Given the discussion above about #ticketDescription, " + 
     "please place a new vote using `/chasm vote`. Maybe try coming to a " + 
     "consensus this time so I can take a break."
     slack.IncomingWebhookClient.postInChannel(message)   

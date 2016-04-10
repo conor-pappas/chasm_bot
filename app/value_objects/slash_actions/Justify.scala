@@ -6,12 +6,14 @@ object Justify extends SlashAction {
   def execute(
     votingSession:Option[VotingSession],
     username:String,
-    data:String) = {
+    data:String):Option[String] = {
     val justification = data
     if (votingSession.isDefined) {
       val currentVote = votingSession.get.votes(username)
       postJustification(justification, currentVote)
     }
+
+    None
   }
 
   def postJustification(justification:String, currentVote:Integer) = {

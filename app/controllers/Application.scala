@@ -3,6 +3,7 @@ package controllers
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import play.api.libs.ws._
 import models._
 
 object Application extends Controller {
@@ -16,8 +17,12 @@ object Application extends Controller {
     val text = params.get("text")(0).split(" ")
     val actionName = text(0).trim
     val data = text.slice(1, text.length).mkString(" ")
+    val responseUrl = params.get("response_url")(0)
 
-    runSlashAction(actionName, data)
+    val responseText = runSlashAction(actionName, data)
+    if(responseText.isDefined) {
+      WS.url(responseUrl).post(responseText.get)
+    }
 
     Ok(Json.obj("status" -> "OK",
                 "action" -> actionName,
@@ -25,7 +30,7 @@ object Application extends Controller {
     ))
   }
 
-  def runSlashAction(actionName:String, data:String) {
+  def runSlashAction(actionName:String, data:String):Option[String] = {
     val votingSession = VotingSession.findCurrent
     val slashAction = matchSlashAction(actionName)
     val username = "conor" // TODO: Get current user

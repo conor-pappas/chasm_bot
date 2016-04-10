@@ -30,7 +30,7 @@ object VotingSession {
     JsObject(votes.mapValues(vote => JsNumber(vote)).toSeq)
   }
 
-  def create(ticket: String, votes: Map[String, Int]) {
+  def create(ticket: String, votes: Map[String, Int]) = {
     val votes_json = votes_to_json(votes).toString()
     DB.withConnection {
       implicit connection =>
@@ -41,7 +41,7 @@ object VotingSession {
     }
   }
 
-  def setVotes(votingSession:VotingSession, votes: Map[String, Int]) {
+  def setVotes(votingSession:VotingSession, votes: Map[String, Int]) = {
     val votes_json = votes_to_json(votes).toString()
     DB.withConnection {
       implicit connection =>
@@ -52,7 +52,7 @@ object VotingSession {
     }
   }
 
-  def clearVotes(votingSession:VotingSession) {
+  def clearVotes(votingSession:VotingSession) = {
     setVotes(votingSession, Map[String, Int]())
   }
 
@@ -60,12 +60,31 @@ object VotingSession {
     val newVotes = votingSession.votes + (user -> vote)
     setVotes(votingSession, newVotes)
   }
+
+
+  def destroy(votingSession:VotingSession) = {
+    DB.withConnection {
+      implicit connection =>
+      SQL(s"""
+        DELETE FROM VotingSession 
+        WHERE id = ${votingSession.id}
+      """).executeUpdate()
+    }
+  }
+
+  def destroyCurrent:Option[VotingSession] = {
+    val current = findCurrent
+    if (current.isDefined) {
+      destroy(current.get)
+    } 
+    return current
+  }
  
   /**
     * Fetch the latest voting session from the database
     * @return VotingSession
     */
-  def findCurrent = {
+  def findCurrent:Option[VotingSession] = {
     DB.withConnection { implicit connection => SQL("SELECT * FROM VotingSession ORDER BY id LIMIT 1").as(VotingSession.simple.singleOpt) }
   }
 }

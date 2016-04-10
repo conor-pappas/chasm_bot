@@ -2,7 +2,7 @@ package slash_actions
 
 object Revote extends SlashAction {
 
-  def execute(votingSession: String, username: String, args: Any*) {
+  def execute(votingSession:String, username:String, data:String) {
     val ticketDescription = "" // TODO get this from the voting session
     // TODO reset votes in voting session
     val message = revoteCalledMessage(ticketDescription)

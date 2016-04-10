@@ -13,15 +13,33 @@ object Application extends Controller {
     val params = request.body.asFormUrlEncoded
     val teamId = params.get("team_id")(0)
     val text = params.get("text")(0).split(" ")
-    val action = text(0).trim
+    val actionName = text(0).trim
     val data = text.slice(1, text.length).mkString(" ")
+
+    runSlashAction(actionName, data)
+
     Ok(Json.obj("status" -> "OK",
-                "action" -> action,
+                "action" -> actionName,
                 "data" -> data
     ))
   }
 
-  def slack_router(action: String): Any = {
-    Logger.debug("Slack router for " + action)
+  def runSlashAction(actionName:String, data:String) {
+    val votingSession = "" // TODO: Actually get a voting session
+    val slashAction = matchSlashAction(actionName)
+    val username = "conor" // TODO: Get current user
+    slashAction.execute(votingSession, username, data)
   }
+
+  def matchSlashAction(actionName:String):slash_actions.SlashAction = {
+    actionName match {
+      case "justify" => slash_actions.Justify
+      case "quesiton" => slash_actions.Question
+      case "results" => slash_actions.Results
+      case "revote" => slash_actions.Revote
+      case "start" => slash_actions.Start
+      case "vote" => slash_actions.Vote
+    }
+  }
+
 }

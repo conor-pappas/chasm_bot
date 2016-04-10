@@ -2,8 +2,8 @@ package slash_actions
 
 object Justify extends SlashAction {
 
-  def execute(votingSession: String, username: String, args: Any*) {
-    val justification = args(0).asInstanceOf[String]
+  def execute(votingSession:String, username:String, data:String) {
+    val justification = data
     val currentVote = 2 //TODO: get this from the voting session 
     val message = justificationMessage(justification, currentVote)
     slack.IncomingWebhookClient.postInChannel(justification)

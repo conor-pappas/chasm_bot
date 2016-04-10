@@ -2,8 +2,8 @@ package slash_actions
 
 object Question extends SlashAction {
 
-  def execute(votingSession: String, username: String, args: Any*) {
-    val question = args(0).asInstanceOf[String]
+  def execute(votingSession:String, username:String, data:String) {
+    val question = data
     val message = questionMessage(question)
     slack.IncomingWebhookClient.postInChannel(questionMessage(message))
   }

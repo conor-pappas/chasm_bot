@@ -2,6 +2,6 @@ package slash_actions
 
 trait SlashAction {
 
-  def execute
+  def execute(votingSession: String, username: String, args: Any*)
 
 }

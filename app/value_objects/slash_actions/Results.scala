@@ -2,7 +2,7 @@ package slash_actions
 
 object Results extends SlashAction {
 
-  def execute {
+  def execute(votingSession: String, username: String, args: Any*) {
     
   }
 

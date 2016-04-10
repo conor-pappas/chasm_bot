@@ -16,9 +16,9 @@ object VotingSession {
     * @return VotingSession
     */
   val simple = {
-    get[Long]("VotingSession.id") ~
-      get[String]("VotingSession.ticket") ~
-      get[String]("VotingSession.votes") map {
+    get[Long]("VotingSessions.id") ~
+      get[String]("VotingSessions.ticket") ~
+      get[String]("VotingSessions.votes") map {
       case id~ticket~votes => {
         val votes_json = Json.parse(votes).as[Map[String, Int]]
         VotingSession(id, ticket, votes_json)
@@ -35,7 +35,7 @@ object VotingSession {
     DB.withConnection {
       implicit connection =>
       SQL(s"""
-        INSERT INTO VotingSession (ticket, votes)
+        INSERT INTO VotingSessions (ticket, votes)
         VALUES ('$ticket', '$votes_json');
       """).executeUpdate()
     }
@@ -46,7 +46,7 @@ object VotingSession {
     DB.withConnection {
       implicit connection =>
       SQL(s"""
-        UPDATE VotingSession SET votes='$votes_json'
+        UPDATE VotingSessions SET votes='$votes_json'
         WHERE id = ${votingSession.id}
       """).executeUpdate()
     }
@@ -66,7 +66,7 @@ object VotingSession {
     DB.withConnection {
       implicit connection =>
       SQL(s"""
-        DELETE FROM VotingSession 
+        DELETE FROM VotingSessions
         WHERE id = ${votingSession.id}
       """).executeUpdate()
     }
@@ -85,6 +85,6 @@ object VotingSession {
     * @return VotingSession
     */
   def findCurrent:Option[VotingSession] = {
-    DB.withConnection { implicit connection => SQL("SELECT * FROM VotingSession ORDER BY id LIMIT 1").as(VotingSession.simple.singleOpt) }
+    DB.withConnection { implicit connection => SQL("SELECT * FROM VotingSessions ORDER BY id LIMIT 1").as(VotingSession.simple.singleOpt) }
   }
 }

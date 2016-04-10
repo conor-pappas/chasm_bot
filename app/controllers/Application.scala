@@ -3,7 +3,6 @@ package controllers
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
-import play.api.libs.ws._
 import models._
 
 object Application extends Controller {
@@ -21,13 +20,10 @@ object Application extends Controller {
 
     val responseText = runSlashAction(actionName, data)
     if(responseText.isDefined) {
-      WS.url(responseUrl).post(responseText.get)
+      Ok(responseText.get)
+    } else {
+      Ok("")
     }
-
-    Ok(Json.obj("status" -> "OK",
-                "action" -> actionName,
-                "data" -> data
-    ))
   }
 
   def runSlashAction(actionName:String, data:String):Option[String] = {

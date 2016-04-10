@@ -1,16 +1,24 @@
 package slash_actions
+import models._
 
 object Question extends SlashAction {
 
-  def execute(votingSession:String, username:String, data:String) {
+  def execute(
+    votingSession:Option[VotingSession],
+    username:String,
+    data:String) = {
     val question = data
-    val message = questionMessage(question)
-    slack.IncomingWebhookClient.postInChannel(questionMessage(message))
+    if (votingSession.isDefined) {
+      postQuestionInChannel(question)
+    } else {
+      // TODO warn that session hasn't started
+    }
   }
 
-  def questionMessage(question:String):String = {
-    s"A user has asked the following question:\n" + question + "\n" + 
-    "Get it right this time, eh?"
+  def postQuestionInChannel(question:String) = {
+    val message = s"A user has asked the following question:\n" + question + 
+    "\nGet it right this time, eh?"
+    slack.IncomingWebhookClient.postInChannel(message)
   }
 
 }

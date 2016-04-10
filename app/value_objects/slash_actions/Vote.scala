@@ -1,10 +1,22 @@
 package slash_actions
+import models._
 
 object Vote extends SlashAction {
 
-  def execute(votingSession:String, username:String, data:String) {
+  def execute(
+    votingSession:Option[VotingSession],
+    username:String,
+    data:String) = {
     var vote = data.toInt
-    // TODO: Set vote on votingSession
+    if (votingSession.isDefined) {
+      addVote(votingSession.get, username, vote)
+    } else {
+      // TODO warn that session hasn't started
+    }
+  }
+
+  def addVote(votingSession:VotingSession, username:String, vote:Int) = {
+    VotingSession.addVote(votingSession, username, vote)
   }
 
 }

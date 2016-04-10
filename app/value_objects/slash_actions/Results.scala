@@ -1,14 +1,22 @@
 package slash_actions
+import models._
 
 object Results extends SlashAction {
 
-  def execute(votingSession:String, username:String, data:String) {
-    val message = currentResults(votingSession)
-    slack.IncomingWebhookClient.directMessage(admin, message)
+  def execute(
+    votingSession:Option[VotingSession],
+    username:String,
+    data:String) = {
+    if (votingSession.isDefined) {
+      sendCurrentResults(votingSession.get)
+    } else {
+      // TODO warn that session hasn't started
+    }
   }
 
-  def currentResults(votingSession:String):String = {
-    "NOBODY IS AGREEING"
+  def sendCurrentResults(votingSession:VotingSession) = {
+    val message = "NOBODY IS AGREEING"
+    slack.IncomingWebhookClient.directMessage(admin, message)
   }
 
 }

@@ -26,7 +26,7 @@ object Application extends Controller {
   }
 
   def runSlashAction(actionName:String, data:String) {
-    val votingSession = "" // TODO: Actually get a voting session
+    val votingSession = VotingSession.findCurrent
     val slashAction = matchSlashAction(actionName)
     val username = "conor" // TODO: Get current user
     slashAction.execute(votingSession, username, data)

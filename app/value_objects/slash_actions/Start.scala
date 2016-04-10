@@ -1,16 +1,29 @@
 package slash_actions
+import models._
 
 object Start extends SlashAction {
 
-  def execute(votingSession: String, username: String, data:String) {
+  def execute(
+    votingSession:Option[VotingSession],
+    username:String,
+    data:String) = {
     val ticketDescription = data
-    val message = votingStartedMessage(ticketDescription)
-    slack.IncomingWebhookClient.postInChannel(message)
+    if (votingSession.isDefined) {
+    // TODO warn that session has already started
+    } else {
+      startNewSession(ticketDescription)
+      sendVotingStartedMessage(ticketDescription)
+    }
   }
 
-  def votingStartedMessage(ticketDescription:String):String = {
-    s"@here Ticket $ticketDescription is ready for voting. Please respond " +
-    "using `/chasm vote` to place your vote."
+  def startNewSession(ticketDescription:String) = {
+    VotingSession.create(ticketDescription, Map[String, Int]())
+  }
+
+  def sendVotingStartedMessage(ticketDescription:String) = {
+    val message = s"@here Ticket $ticketDescription is ready for voting. " +
+    "Please respond using `/chasm vote` to place your vote."
+    slack.IncomingWebhookClient.postInChannel(message)
   }
 
 }

@@ -1,17 +1,23 @@
 package slash_actions
+import models._
 
 object Justify extends SlashAction {
 
-  def execute(votingSession:String, username:String, data:String) {
+  def execute(
+    votingSession:Option[VotingSession],
+    username:String,
+    data:String) = {
     val justification = data
-    val currentVote = 2 //TODO: get this from the voting session 
-    val message = justificationMessage(justification, currentVote)
-    slack.IncomingWebhookClient.postInChannel(justification)
+    if (votingSession.isDefined) {
+      val currentVote = votingSession.get.votes(username)
+      postJustification(justification, currentVote)
+    }
   }
 
-  def justificationMessage(justification:String, currentVote:Integer):String = {
-    s"A user has justified their vote of $currentVote with the following:\n" +
-    justification + "\n" + "*Insert cheeky comment here*"
+  def postJustification(justification:String, currentVote:Integer) = {
+    val message = s"A user has justified their vote of $currentVote with the " + 
+    "following:\n" + justification + "\n" + "*Insert cheeky comment here*"
+    slack.IncomingWebhookClient.postInChannel(message)
   }
 
 }

@@ -6,7 +6,7 @@ import play.api.libs.json._
 
 object Application extends Controller {
   def index = Action {
-    Ok("Hello World")
+    Ok(views.html.index("Your new application is ready."))
   }
 
   def slack = Action { request =>

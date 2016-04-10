@@ -12,6 +12,16 @@ object Application extends Controller {
   def slack = Action { request =>
     val params = request.body.asFormUrlEncoded
     val teamId = params.get("team_id")(0)
-    Ok(Json.obj("status" -> "OK", "message" -> teamId))
+    val text = params.get("text")(0).split(" ")
+    val action = text(0).trim
+    val data = text.slice(1, text.length).mkString(" ")
+    Ok(Json.obj("status" -> "OK",
+                "action" -> action,
+                "data" -> data
+    ))
+  }
+
+  def slack_router(action: String): Any = {
+    Logger.debug("Slack router for " + action)
   }
 }

@@ -6,6 +6,7 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 import scala.language.postfixOps
+import play.api.libs.json._
 
 case class VotingSession(id: Pk[Long], ticket: String, votes: Map[String, Int])
 
@@ -27,6 +28,16 @@ object VotingSession {
         VotingSession(null, null, null)
       }
     }
+  }
+
+  def toJson(votingSession:VotingSession):String = {
+    s"""(Seq)
+    {
+      "id": ${votingSession.id},
+      "ticket": ${votingSession.ticket},
+      "votes": ${Json.toJson(votingSession.votes)}
+    }
+    """
   }
 }
 

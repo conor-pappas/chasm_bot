@@ -4,4 +4,8 @@ object Question extends SlashAction {
 
   name = "question"
 
+  def runAction {
+    
+  }
+
 }

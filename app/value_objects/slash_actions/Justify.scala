@@ -4,4 +4,8 @@ object Justify extends SlashAction {
 
   name = "justify"
 
+  def runAction {
+    
+  }
+
 }

@@ -4,4 +4,8 @@ object Revote extends SlashAction {
 
   name = "revote"
 
+  def runAction {
+    
+  }
+
 }

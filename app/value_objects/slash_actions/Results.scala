@@ -4,4 +4,8 @@ object Results extends SlashAction {
 
   name = "results"
 
+  def runAction {
+    
+  }
+
 }

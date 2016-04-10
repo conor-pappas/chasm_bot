@@ -1,7 +1,9 @@
 package slash_actions
 
-class SlashAction {
+trait SlashAction {
 
   var name : String = null
+
+  def runAction
 
 }

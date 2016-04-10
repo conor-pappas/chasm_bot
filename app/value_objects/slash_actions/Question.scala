@@ -2,9 +2,7 @@ package slash_actions
 
 object Question extends SlashAction {
 
-  name = "question"
-
-  def runAction {
+  def execute {
     
   }
 

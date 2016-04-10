@@ -11,6 +11,23 @@ case class VotingSession(id: Pk[Long], ticket: String, votes: Map[String, Int])
 
 object VotingSession {
 
+  // -- Parsers
+
+  /**
+    * Parse a Task from a ResultSet
+    */
+  val simple = {
+    get[Pk[Long]]("voting_session.id") ~
+      get[String]("voting_session.ticket") ~
+      get[String]("voting_session.votes") map {
+      case id~ticket~votes => {
+//        vote_map = PARSE JSON PLEASE(votes)
+//        vote_map = Map[String, Int]
+//        VotingSession(id, ticket, votes)
+        VotingSession(null, null, null)
+      }
+    }
+  }
 }
 
 //

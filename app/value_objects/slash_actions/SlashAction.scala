@@ -1,5 +1,7 @@
 package slash_actions
 
-object SlashAction {
+class SlashAction {
+
+  var name : String = null
 
 }

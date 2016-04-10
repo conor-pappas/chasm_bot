@@ -8,12 +8,12 @@ object Start extends SlashAction {
     username:String,
     data:String) = {
     val ticketDescription = data
-    if (votingSession.isDefined) {
-    // TODO warn that session has already started
-    } else {
-      startNewSession(ticketDescription)
-      sendVotingStartedMessage(ticketDescription)
-    }
+
+    VotingSession.destroyCurrent
+
+    startNewSession(ticketDescription)
+    sendVotingStartedMessage(ticketDescription)
+  
   }
 
   def startNewSession(ticketDescription:String) = {

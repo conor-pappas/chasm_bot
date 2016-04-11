@@ -36,7 +36,7 @@ object Application extends Controller {
   def matchSlashAction(actionName:String):slash_actions.SlashAction = {
     actionName match {
       case "justify" => slash_actions.Justify
-      case "quesiton" => slash_actions.Question
+      case "question" => slash_actions.Question
       case "results" => slash_actions.Results
       case "revote" => slash_actions.Revote
       case "start" => slash_actions.Start

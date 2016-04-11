@@ -19,7 +19,7 @@ object Application extends Controller {
     val responseUrl = params.get("response_url")(0)
     val username = params.get("user_name")[0]
 
-    val responseText = runSlashAction(actionName, data)
+    val responseText = runSlashAction(actionName, data, username)
     if(responseText.isDefined) {
       Ok(responseText.get)
     } else {

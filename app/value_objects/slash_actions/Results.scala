@@ -9,15 +9,14 @@ object Results extends SlashAction {
     data:String):Option[String] = {
     if (votingSession.isDefined) {
       sendCurrentResults(votingSession.get)
+      return None
     } else {
-      // TODO warn that session hasn't started
+      return Some("No voting session is active right now.")
     }
-
-    None
   }
 
   def sendCurrentResults(votingSession:VotingSession) = {
-    val message = "NOBODY IS AGREEING"
+    val message = votingSession.votes.toString()
     slack.IncomingWebhookClient.directMessage(admin, message)
   }
 

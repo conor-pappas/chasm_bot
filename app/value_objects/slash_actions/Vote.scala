@@ -14,7 +14,7 @@ object Vote extends SlashAction {
       // TODO warn that session hasn't started
     }
 
-    None
+    Some("Thank you for your vote")
   }
 
   def addVote(votingSession:VotingSession, username:String, vote:Int) = {

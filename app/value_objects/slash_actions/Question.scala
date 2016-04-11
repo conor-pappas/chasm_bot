@@ -10,11 +10,10 @@ object Question extends SlashAction {
     val question = data
     if (votingSession.isDefined) {
       postQuestionInChannel(question)
+      None
     } else {
-      // TODO warn that session hasn't started
+      noActiveSessionWarning
     }
-
-    None
   }
 
   def postQuestionInChannel(question:String) = {

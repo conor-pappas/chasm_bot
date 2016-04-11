@@ -9,9 +9,9 @@ object Results extends SlashAction {
     data:String):Option[String] = {
     if (votingSession.isDefined) {
       sendCurrentResults(votingSession.get)
-      return None
+      None
     } else {
-      return Some("No voting session is active right now.")
+      noActiveSessionWarning
     }
   }
 

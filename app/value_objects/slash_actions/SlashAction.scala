@@ -10,4 +10,8 @@ trait SlashAction {
     username:String,
     data:String):Option[String]
 
+  def noActiveSessionWarning:Option[String] = {
+    Some("No voting session is active right now.")
+  }
+
 }

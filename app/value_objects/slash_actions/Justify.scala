@@ -11,9 +11,10 @@ object Justify extends SlashAction {
     if (votingSession.isDefined) {
       val currentVote = votingSession.get.votes(username)
       postJustification(justification, currentVote)
+      None
+    } else {
+      noActiveSessionWarning
     }
-
-    None
   }
 
   def postJustification(justification:String, currentVote:Integer) = {

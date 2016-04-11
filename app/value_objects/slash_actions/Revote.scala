@@ -12,11 +12,10 @@ object Revote extends SlashAction {
       val ticketDescription = session.ticket
       clearVotes(session)
       sendRevoteCalledMessage(ticketDescription)
+      None
     } else {
-      // TODO warn that session hasn't started
+      noActiveSessionWarning
     }
-
-    None
   }
 
   def clearVotes(session:VotingSession) = {

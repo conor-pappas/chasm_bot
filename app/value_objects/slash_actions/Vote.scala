@@ -10,11 +10,10 @@ object Vote extends SlashAction {
     var vote = data.toInt
     if (votingSession.isDefined) {
       addVote(votingSession.get, username, vote)
+      Some("Thank you for your vote")
     } else {
-      // TODO warn that session hasn't started
+      noActiveSessionWarning
     }
-
-    Some("Thank you for your vote")
   }
 
   def addVote(votingSession:VotingSession, username:String, vote:Int) = {
